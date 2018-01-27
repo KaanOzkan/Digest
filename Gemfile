@@ -1,0 +1,8 @@
+source 'https://rubygems.org'
+gem 'byebug'
+gem 'http'
+gem 'rubocop'
+gem 'rack'
+gem 'rspec'
+gem 'sinatra'
+gem 'yard'

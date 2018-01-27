@@ -1,0 +1,5 @@
+# Temporary file to run from command line
+require './lib/driver'
+
+driver = Driver.new
+driver.get_subreddits
