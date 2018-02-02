@@ -20,11 +20,16 @@ class Connection
   end
 
   def self.subscribed(url)
-    connect.get(url).to_s
+    response = connect.get(url)
+    response.to_s if response.code == 200
+    return response.to_s unless response.code != 200
+    raise("Couldn't get subscribed subreddits, #{response.body}")
   end
 
   # Does not need authorization
   def self.top(url)
-    HTTP.get(url).to_s
+    response = HTTP.get(url)
+    return response.to_s unless response.code != 200
+    raise("Couldn't get the top posts, #{response.body}")
   end
 end
