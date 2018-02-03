@@ -20,23 +20,21 @@ class Reddit
     @top_posts = {}
   end
 
-  def top_posts
+  def top_post(limit)
     if @subscribed_subreddits.empty?
-      # Someone forgot!
       subscribed_subreddits
     end
-
     # From specified subscribed subreddits lookup top posts &
     # Digest, another class should handle preparing this information
 
     # I am only interested subreddits I subscribed to
-    # In the future parameterize time and limit
+    # In the future parameterize time
     @subscribed_subreddits.each do |subreddit|
-      top_info = Connection.top("https://www.reddit.com/r/#{subreddit}/top/.json?t=day&limit=2")
+      top_info = Connection.top("https://www.reddit.com/r/#{subreddit}/top/.json?t=day&limit=#{limit}")
       hash = JSON.parse(top_info)['data']['children']
       hash.each do |field|
         subreddit_name = field['data']['subreddit']
-        # data contains detailed information about top posts
+        # Another implementation could be store post id and necessary requests can be done in the future
         data = hash
         @top_posts[subreddit_name.to_sym] = data
       end

@@ -11,6 +11,7 @@ class Driver
     reddit = Reddit.new
     # Get subscribed_subreddits before looking for top
     reddit.subscribed_subreddits
-    reddit.top_posts
+    # Should receive the limit from the router
+    reddit.top_posts(2)
   end
 end
