@@ -8,7 +8,7 @@ class Connection
   #
   # Reddit
   @reddit_refresh_token = '55649311-GyspsnQ2RxHsfD8U-2c7LsIzWYc'
-  @reddit_access_token =  'Mui0MNePIsw342V9cNpeNaHz6SM'
+  @reddit_access_token =  'OJBFOHfqZ_Qbfd_89hCJ313W4k0'
 
   def self.refresh_access_token
     response = HTTP.basic_auth(user: 'f0swaO18dSYpNQ',
