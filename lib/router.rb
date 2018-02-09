@@ -10,6 +10,7 @@ class DigestApp < Sinatra::Base
     halt 404, 'Media not found' unless params[:name].downcase == 'reddit'
     reddit = Reddit.new
     reddit.top_post(1)
+    # @todo Delete
     reddit.top_posts[:Gunners][0]['data']['permalink']
   end
 
