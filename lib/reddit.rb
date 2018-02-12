@@ -34,13 +34,20 @@ class Reddit
       hash = JSON.parse(top_info)['data']['children']
       hash.each do |field|
         subreddit_name = field['data']['subreddit']
-        # Another implementation could be store post id and necessary requests can be done in the future
+        # Another implementation could be store post id and necessary requests, can be done in the future
         data = hash
-        @top_posts[subreddit_name.to_sym] = data
+        top_posts[subreddit_name.to_sym] = data
       end
     end
-    # This is how to access information for a post given subreddit
-    # puts @top_posts[:Gunners][0]['data']['title']
+  end
+
+
+  # @todo Currently only formatting a single post for each
+  def format(hash)
+    @top_posts.each do |subreddit, data|
+      link = data[0]['data']['permalink']
+      @top_posts[subreddit] = link
+    end
   end
 
   def subscribed_subreddits
