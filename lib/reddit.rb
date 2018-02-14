@@ -18,6 +18,7 @@ class Reddit
   def initialize
     @subscribed_subreddits = []
     @top_posts = {}
+    @data_hash = {} # Will hold more data than @top_posts
     @connection = Connection.new
   end
 
@@ -25,8 +26,7 @@ class Reddit
     if @subscribed_subreddits.empty?
       subscribed_subreddits
     end
-    # From specified subscribed subreddits lookup top posts &
-    # Digest, another class should handle preparing this information
+    # From specified subscribed subreddits lookup top posts & Digest
 
     # I am only interested subreddits I subscribed to
     # In the future parameterize time
@@ -35,18 +35,18 @@ class Reddit
       hash = JSON.parse(top_info)['data']['children']
       hash.each do |field|
         subreddit_name = field['data']['subreddit']
-        # Another implementation could be store post id and necessary requests, can be done in the future
         data = hash
-        @top_posts[subreddit_name.to_sym] = data
+        @data_hash[subreddit_name.to_sym] = data
       end
     end
   end
 
   def format
-    @top_posts.each do |subreddit, data|
+    @data_hash.each do |subreddit, data|
       link = data[0]['data']['permalink']
       @top_posts[subreddit] = link
     end
+    @top_posts
   end
 
   private

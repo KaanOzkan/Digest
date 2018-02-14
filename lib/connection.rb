@@ -1,14 +1,14 @@
 require 'http'
 require 'json'
 
-# Handles requests for various media
+# Handles requests for reddit
 #
 class Connection
 
   # Reddit
   def initialize
     @reddit_refresh_token = '55649311-GyspsnQ2RxHsfD8U-2c7LsIzWYc'
-    @reddit_access_token  =  '14FjeJ1h-iqVGsaodiZoH-mtC_A'
+    @reddit_access_token  = '14FjeJ1h-iqVGsaodiZoH-mtC_A'
   end
 
   def refresh_access_token
@@ -19,8 +19,9 @@ class Connection
                    redirect_uri: 'https://www.reddit.com' }
     response = response.post('https://www.reddit.com/api/v1/access_token',
                               form: body_param)
+    raise("Couldn't refresh") if response.code != 200
     @reddit_access_token = JSON.parse(response.to_s)['access_token']
-    # For development
+    # @todo Log
     puts "New Access Token: #{@reddit_access_token}"
   end
 
@@ -34,7 +35,7 @@ class Connection
       refresh_access_token
       response = connect.get(url)
     end
-    return response.to_s if response.code == 200
+    return response.to_s unless response.code != 200
     raise("Couldn't get subscribed subreddits, #{response.body}")
   end
 
