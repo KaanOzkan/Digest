@@ -4,13 +4,14 @@ require 'json'
 # Handles requests for various media
 #
 class Connection
-  # @todo Remove reddit tokens from Connection scope, could be in Reddit Model
-  #
-  # Reddit
-  @reddit_refresh_token = '55649311-GyspsnQ2RxHsfD8U-2c7LsIzWYc'
-  @reddit_access_token =  'OJBFOHfqZ_Qbfd_89hCJ313W4k0'
 
-  def self.refresh_access_token
+  # Reddit
+  def initialize
+    @reddit_refresh_token = '55649311-GyspsnQ2RxHsfD8U-2c7LsIzWYc'
+    @reddit_access_token  =  '14FjeJ1h-iqVGsaodiZoH-mtC_A'
+  end
+
+  def refresh_access_token
     response = HTTP.basic_auth(user: 'f0swaO18dSYpNQ',
                                pass: 'V2vi9PPNYvkkHzQM0_Aw_ovq33k')
     body_param = { grant_type: 'refresh_token',
@@ -23,12 +24,11 @@ class Connection
     puts "New Access Token: #{@reddit_access_token}"
   end
 
-  # Reddit
-  def self.connect
+  def connect
     HTTP.auth("Bearer #{@reddit_access_token}")
   end
 
-  def self.subscribed(url)
+  def subscribed(url)
     response = connect.get(url)
     if response.code == 401 # unauthorized, try again
       refresh_access_token
@@ -39,7 +39,7 @@ class Connection
   end
 
   # Does not need authorization
-  def self.top(url)
+  def top(url)
     response = HTTP.get(url)
     return response.to_s unless response.code != 200
     raise("Couldn't get the top posts, #{response.body}")

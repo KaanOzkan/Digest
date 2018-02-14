@@ -18,6 +18,7 @@ class Reddit
   def initialize
     @subscribed_subreddits = []
     @top_posts = {}
+    @connection = Connection.new
   end
 
   def top_post(limit)
@@ -30,28 +31,27 @@ class Reddit
     # I am only interested subreddits I subscribed to
     # In the future parameterize time
     @subscribed_subreddits.each do |subreddit|
-      top_info = Connection.top("https://www.reddit.com/r/#{subreddit}/top/.json?t=day&limit=#{limit}")
+      top_info = @connection.top("https://www.reddit.com/r/#{subreddit}/top/.json?t=day&limit=#{limit}")
       hash = JSON.parse(top_info)['data']['children']
       hash.each do |field|
         subreddit_name = field['data']['subreddit']
         # Another implementation could be store post id and necessary requests, can be done in the future
         data = hash
-        top_posts[subreddit_name.to_sym] = data
+        @top_posts[subreddit_name.to_sym] = data
       end
     end
   end
 
-
-  # @todo Currently only formatting a single post for each
-  def format(hash)
+  def format
     @top_posts.each do |subreddit, data|
       link = data[0]['data']['permalink']
       @top_posts[subreddit] = link
     end
   end
 
+  private
   def subscribed_subreddits
-    subscribed_subreddits_json = Connection.subscribed(SUBSCRIBED)
+    subscribed_subreddits_json = @connection.subscribed(SUBSCRIBED)
     subscribed_subreddit_info_hash = JSON.parse(subscribed_subreddits_json)['data']['children']
 
     subscribed_subreddit_info_hash.each do |subreddit_data|
